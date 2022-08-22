@@ -60,7 +60,44 @@ class Model:
         return result_dict
 
     def save(self) -> None:
-        pass
+        if self.pk:
+            self.__class__.database.update(
+                cls=self.__class__,
+                serialized_obj=self.serialize(),
+                pk=self.pk
+            )
+        else:
+            self.pk = self.__class__.database.insert(
+                cls=self.__class__,
+                serialized_obj=self.serialize()
+            )
+
+    def remove(self) -> None:
+        if self.pk:
+            self.__class__.database.remove(
+                cls=self.__class__,
+                pk=self.pk
+            )
+        del self
+
+    @classmethod
+    def get(cls, key: str, value) -> 'Model':
+        return cls(
+            **cls.database.get(
+                cls=cls,
+                key_name=key,
+                value=value
+            )
+        )
+
+    @classmethod
+    def get_all(cls, key: str, value) -> list['Model']:
+        doc_list = cls.database.get_all(
+            cls=cls,
+            key_name=key,
+            value=value
+        )
+        return [cls(**document) for document in doc_list]
 
 
 class Round(Model):
