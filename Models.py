@@ -1,4 +1,9 @@
+from database import TinyDBDataBase
+
+
 class Model:
+
+    database = TinyDBDataBase(file='db.json')
 
     field_dict = {}
 
