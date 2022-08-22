@@ -3,14 +3,16 @@ class Model:
     field_dict = {}
 
     def __init__(self, **kwargs):
-        self.saved = 'pk' in kwargs.keys()
+        self.pk = None
+        if 'pk' in kwargs.keys():
+            self.pk = kwargs['pk']
         for key, value in self.__class__.field_dict.items():
             if key in kwargs.keys():
                 self.__setattr__(name=key, value=kwargs[key])
             else:
                 super(Model, self).__setattr__(name=key, value=None)
 
-    def __setattr__(self, name, value):
+    def check_field_value(self, name, value) -> bool:
         if name in self.__class__.field_dict.keys():
             field = self.__class__.field_dict[name]
             field_type = field['type']
@@ -21,21 +23,36 @@ class Model:
             if 'default' in field.keys():
                 field_default = field['default']
             if field_type == type(value):
-                super(Model, self).__setattr__(name=name, value=value)
+                return True
             elif value is None:
                 if field_blank:
-                    super(Model, self).__setattr__(name=name, value=value)
+                    return True
                 elif field_default is not None:
-                    super(Model, self).__setattr__(name=name, value=field_default)
+                    return True
                 else:
                     raise ValueError(f'Value can not be None !')
             else:
                 raise TypeError(f'{name} has to be a {field_type} and the value is a {type(value)} !')
         else:
+            raise ValueError(f'{name} is not a field')
+
+    def __setattr__(self, name, value):
+        if name in self.__class__.field_dict.keys():
+            if self.check_field_value(name=name, value=value):
+                field = self.__class__.field_dict[name]
+                if value is None and 'default' in field.keys():
+                    value = field['default']
+                super(Model, self).__setattr__(name=name, value=value)
+        else:
             super(Model, self).__setattr__(name=name, value=value)
 
     def serialize(self) -> dict:
-        pass
+        result_dict = {}
+        for key, val in self.__class__.field_dict.items():
+            field_value = self.__getattribute__(name=key)
+            self.__setattr__(name=key, value=field_value)
+            result_dict[key] = self.__getattribute__(name=key)
+        return result_dict
 
     def save(self) -> None:
         pass
