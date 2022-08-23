@@ -108,7 +108,11 @@ class Match(Model):
 
 
 class Round(Model):
-    pass
+    field_dict = {
+        'matches': {
+            'type': list
+        }
+    }
 
 
 class Player(Model):
@@ -133,11 +137,11 @@ class Player(Model):
     def __init__(self, **kwargs):
         super(Player, self).__init__(**kwargs)
         if 'birthdate' in kwargs.keys():
-            self.birthdate = json.loads(kwargs['birthdate'])
+            self.birthdate = datetime.date(*json.loads(kwargs['birthdate'])[:3])
 
     def serialize(self) -> dict:
         result = super(Player, self).serialize()
-        result['birthdate'] = json.dumps(result['birthdate'])
+        result['birthdate'] = json.dumps(result['birthdate'].timetuple())
         return result
 
     def check_field_value(self, name, value) -> bool:
@@ -180,7 +184,8 @@ class Tournament(Model):
     def __init__(self, **kwargs):
         super(Tournament, self).__init__(**kwargs)
         if 'date' in kwargs.keys():
-            self.date = json.loads(kwargs['date'])
+            dates = json.loads(kwargs['date'])
+            self.date = [datetime.date(*date[:3]) for date in dates]
         if self.pk:
             players = json.loads(kwargs['players'])
             self.players = [Player.get(key='pk', value=player) for player in players]
@@ -209,7 +214,7 @@ class Tournament(Model):
 
     def serialize(self) -> dict:
         result = super(Tournament, self).serialize()
-        result['date'] = json.dumps(result['date'])
+        result['date'] = json.dumps([date.timetuple() for date in result['date']])
         result['players'] = json.dumps([player.pk for player in result['players']])
         result['rounds'] = json.dumps([tournament_round.pk for tournament_round in result['rounds']])
         return result
