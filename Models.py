@@ -18,7 +18,7 @@ class Model:
             if key in kwargs.keys():
                 self.__setattr__(name=key, value=kwargs[key])
             else:
-                super(Model, self).__setattr__(name=key, value=None)
+                super(Model, self).__setattr__(key, None)
 
     def check_field_value(self, name, value) -> bool:
         if name in self.__class__.field_dict.keys():
@@ -50,16 +50,16 @@ class Model:
                 field = self.__class__.field_dict[name]
                 if value is None and 'default' in field.keys():
                     value = field['default']
-                super(Model, self).__setattr__(name=name, value=value)
+                super(Model, self).__setattr__(name, value)
         else:
-            super(Model, self).__setattr__(name=name, value=value)
+            super(Model, self).__setattr__(name, value)
 
     def serialize(self) -> dict:
         result_dict = {}
         for key, val in self.__class__.field_dict.items():
-            field_value = self.__getattribute__(name=key)
+            field_value = self.__getattribute__(key)
             self.__setattr__(name=key, value=field_value)
-            result_dict[key] = self.__getattribute__(name=key)
+            result_dict[key] = self.__getattribute__(key)
         return result_dict
 
     def save(self) -> None:
@@ -81,7 +81,6 @@ class Model:
                 cls=self.__class__,
                 pk=self.pk
             )
-        del self
 
     @classmethod
     def get(cls, key: str, value) -> 'Model':
@@ -101,10 +100,6 @@ class Model:
             value=value
         )
         return [cls(**document) for document in doc_list]
-
-
-class Match(Model):
-    pass
 
 
 class Round(Model):
@@ -179,9 +174,9 @@ class Player(Model):
     }
 
     def __init__(self, **kwargs):
-        super(Player, self).__init__(**kwargs)
         if 'birthdate' in kwargs.keys():
-            self.birthdate = datetime.date(*json.loads(kwargs['birthdate'])[:3])
+            kwargs['birthdate'] = datetime.date(*json.loads(kwargs['birthdate'])[:3])
+        super(Player, self).__init__(**kwargs)
 
     def serialize(self) -> dict:
         result = super(Player, self).serialize()
