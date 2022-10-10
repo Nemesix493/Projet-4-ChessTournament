@@ -32,10 +32,14 @@ class TinyDBDataBase:
             result[key] = val
         return result
 
-    def get_all(self, cls: type, key_name: str, value) -> list[dict]:
+    def get_all(self, cls: type, key_name: str | None, value) -> list[dict]:
         table = self.db.table(name=cls.__name__.lower())
         result = []
-        docs = table.search(where(key_name) == value)
+        docs = []
+        if key_name is None or value is None:
+            docs = table.all()
+        else:
+            docs = table.search(where(key_name) == value)
         for doc in docs:
             doc_dict = {
                 'pk': doc.doc_id
