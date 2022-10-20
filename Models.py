@@ -93,7 +93,7 @@ class Model:
         )
 
     @classmethod
-    def get_all(cls, key: str, value) -> list['Model']:
+    def get_all(cls, key: str | None, value) -> list['Model']:
         doc_list = cls.database.get_all(
             cls=cls,
             key_name=key,
