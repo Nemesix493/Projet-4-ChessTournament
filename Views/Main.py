@@ -1,6 +1,5 @@
 import math
 import os
-import sys
 
 
 class ViewsInterface:
@@ -12,6 +11,9 @@ class ViewsInterface:
         pass
 
     def title(self, title: str) -> None:
+        pass
+
+    def report(self, fields: dict, title: str = None, header: str = None, footer: str = None) -> None:
         pass
 
 
@@ -64,3 +66,17 @@ class TerminalViews(ViewsInterface):
                 footer,
             )
         return result
+
+    def report(self, fields: dict, title: str = None, header: str = None, footer: str = None) -> None:
+        if title:
+            self.title(title)
+        if header:
+            print(
+                header,
+            )
+        for key, val in fields.items():
+            print(f'{key}: ' + val.replace('\n', f'\n {(len(key) + 1) * " "}'))
+        if footer:
+            print(
+                footer,
+            )
