@@ -5,7 +5,8 @@ import Models
 
 
 class PlayerController:
-    def normalize_name(self, name) -> str:
+    @staticmethod
+    def normalize_name(name) -> str:
         if not name.replace(' ', '').replace('-', '').isalpha():
             raise ValueError('contient des caractères spéciaux autre que "-" ou des chiffres !')
         normed_list = [[word.capitalize() for word in words.split('-')]
@@ -23,7 +24,7 @@ class PlayerController:
         }
         player_dict = view.form(
             title="Ajout d'un nouveau joueur",
-            items=options
+            fields=options
         )
         while True:
             player = Models.Player()
@@ -77,7 +78,7 @@ class PlayerController:
             else:
                 player_dict = view.form(
                     header=error,
-                    items=options
+                    fields=options
                 )
         while True:
             result = view.menu(
@@ -96,7 +97,7 @@ class PlayerController:
     def list_player(self, view: ViewsInterface):
         all_player = Models.Player.get_all(key=None, value=None)
         header = f'Choisissez un joueur pour avoir plus d\'information'
-        items_list =[
+        items_list = [
             *[f'{player.first_name} {player.last_name}' for player in all_player],
             'Retour au menu principal'
         ]
@@ -111,7 +112,7 @@ class PlayerController:
             option_key = int(option_key)
             if option_key >= len(items_list):
                 return None
-            self.display_player(player=all_player[option_key - 1])
+            self.display_player(player=all_player[option_key - 1], view=view)
             option_key = view.menu(items=['Continuer', 'Retour au menu principal'])
             while not (option_key.isnumeric() and option_key != '0'):
                 option_key = view.menu(header='Option invalide !', items=[])
@@ -119,5 +120,35 @@ class PlayerController:
             if option_key >= 2:
                 return None
 
-    def display_player(self, player: Models.Player):
-        print(player.first_name)
+    def display_player(self, player: Models.Player, view: ViewsInterface):
+        fields = {
+            'Nom ': player.last_name,
+            'Prénom ': player.first_name,
+            'Date de naissance ': player.birthdate.strftime("%d/%m/%Y"),
+            'Genre ': player.gender,
+            'Rang ': player.rank
+        }
+        view.report(fields=fields, title=player.first_name)
+        option_key = view.menu(
+            items=[
+                'Retour a la liste des joueur',
+                'Modifier le joueur'
+            ]
+        )
+        while True:
+            if option_key.replace(' ', '') == '2':
+                self.edit_player(view=view)
+                return None
+            elif option_key.replace(' ', '') == '1':
+                return None
+            else:
+                option_key = view.menu(
+                    items=[
+                        'Retour a la liste des joueur',
+                        'Modifier le joueur'
+                    ],
+                    header='Option invalide !'
+                )
+
+    def edit_player(self, player: Models.Player, view: ViewsInterface):
+        pass
