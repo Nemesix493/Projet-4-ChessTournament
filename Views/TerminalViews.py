@@ -2,19 +2,7 @@ import math
 import os
 
 
-class ViewsInterface:
-
-    def menu(self, items: list, title: str = None, header: str = None, footer: str = None) -> str:
-        pass
-
-    def form(self, fields: dict, title: str = None, header: str = None, footer: str = None) -> dict:
-        pass
-
-    def title(self, title: str) -> None:
-        pass
-
-    def report(self, fields: dict, title: str = None, header: str = None, footer: str = None) -> None:
-        pass
+from .ViewsInterface import ViewsInterface
 
 
 class TerminalViews(ViewsInterface):
@@ -51,7 +39,7 @@ class TerminalViews(ViewsInterface):
             )
         if submit:
             return input(submit)
-        return input('Votre choix: ')
+        return input('Votre choix: ').replace(' ', '')
 
     def form(self, fields: dict, title: str = None, header: str = None, footer: str = None) -> dict:
         if title:
@@ -66,17 +54,3 @@ class TerminalViews(ViewsInterface):
                 footer,
             )
         return result
-
-    def report(self, fields: dict, title: str = None, header: str = None, footer: str = None) -> None:
-        if title:
-            self.title(title)
-        if header:
-            print(
-                header,
-            )
-        for key, val in fields.items():
-            print(f'{key}: ' + val.replace('\n', f'\n {(len(key) + 1) * " "}'))
-        if footer:
-            print(
-                footer,
-            )
