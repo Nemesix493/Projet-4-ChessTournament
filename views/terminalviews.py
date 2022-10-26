@@ -2,11 +2,20 @@ import math
 import os
 
 
-from .ViewsInterface import ViewsInterface
+from .viewsinterface import ViewsInterface
 
 
 class TerminalViews(ViewsInterface):
-    def title(self, title: str) -> None:
+    """
+    Class to display the app in a terminal
+    """
+    @staticmethod
+    def title(title: str) -> None:
+        """
+        Display menu
+        :param title: str
+        :return:
+        """
         title_width = 100
         try:
             title_width = math.floor(os.get_terminal_size().columns / 2)
@@ -22,6 +31,15 @@ class TerminalViews(ViewsInterface):
             )
 
     def menu(self, items: list, title: str = None, header: str = None, footer: str = None, submit: str = None) -> str:
+        """
+        Display a menu in terminal and return the selected option
+        :param items: list
+        :param title: str
+        :param header: str
+        :param footer: str
+        :param submit: str
+        :return: str
+        """
         if title:
             self.title(title)
         if header:
@@ -42,6 +60,14 @@ class TerminalViews(ViewsInterface):
         return input('Votre choix: ').replace(' ', '')
 
     def form(self, fields: dict, title: str = None, header: str = None, footer: str = None) -> dict:
+        """
+        Display a form and return the user inputs in a dict
+        :param fields: dict
+        :param title: str
+        :param header: str
+        :param footer: str
+        :return: dict
+        """
         if title:
             self.title(title)
         if header:
