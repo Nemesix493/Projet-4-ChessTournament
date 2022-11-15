@@ -1,4 +1,4 @@
-from Views.Main import ViewsInterface
+from views import ViewsInterface
 
 
 def is_valid_option_key(option_key: str, list_len: int) -> bool:
@@ -18,8 +18,8 @@ def is_valid_option_key(option_key: str, list_len: int) -> bool:
 
 
 def check_menu(view: ViewsInterface, items: list, title: str = None, header: str = None, footer: str = None,
-               submit: str = None, invalid_title: str = None, invalid_header: str = None,
-               invalid_footer: str = None, invalid_submit: str = None) -> int:
+               submit: str = None, invalid_title: str = None, invalid_footer: str = None, invalid_submit: str = None,
+               invalid_header: str = 'Option invalide !') -> int:
     """
     Display the menu in loop while the option is not valid
     :param view: ViewsInterface
@@ -50,3 +50,19 @@ def check_menu(view: ViewsInterface, items: list, title: str = None, header: str
             submit=invalid_submit
         )
     return int(option_key)-1
+
+
+def check_form(view: ViewsInterface, fields: dict, title: str = None, header: str = None, footer: str = None) -> dict:
+    form_filled = view.form(
+        fields={field: value[0] for field, value in fields.items()},
+        title=title,
+        header=header,
+        footer=footer
+    )
+    for key in fields.keys():
+        while not fields[key][1](form_filled[key]):
+            form_filled[key] = view.form(
+                fields={key: fields[key][0]},
+                header=f'{form_filled[key]} {fields[key][2]}'
+            )
+    return form_filled
