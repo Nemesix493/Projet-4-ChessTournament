@@ -29,3 +29,6 @@ class ViewsInterface(abc.ABC):
         :return: dict
         """
         pass
+
+    def header(self, text: str):
+        pass
