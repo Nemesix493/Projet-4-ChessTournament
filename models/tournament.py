@@ -37,15 +37,15 @@ class Tournament(Model):
     }
 
     def __init__(self, **kwargs):
-        super(Tournament, self).__init__(**kwargs)
-        if 'date' in kwargs.keys():
-            dates = json.loads(kwargs['date'])
-            self.date = [datetime.date(*date[:3]) for date in dates]
-        if self.pk:
-            players = json.loads(kwargs['players'])
-            self.players = [Player.get(key='pk', value=player) for player in players]
-            rounds = json.loads(kwargs['rounds'])
-            self.players = [Round.get(key='pk', value=tournament_round) for tournament_round in rounds]
+        self_value_dict = {key: val for key, val in kwargs.items()}
+        if 'pk' in self_value_dict.keys():
+            players = json.loads(self_value_dict['players'])
+            self_value_dict['players'] = [Player.get(key='pk', value=player) for player in players]
+            rounds = json.loads(self_value_dict['rounds'])
+            self_value_dict['rounds'] = [Round.get(key='pk', value=tournament_round) for tournament_round in rounds]
+            dates = json.loads(self_value_dict['date'])
+            self_value_dict['date'] = [datetime.date(*date[:3]) for date in dates]
+        super(Tournament, self).__init__(**self_value_dict)
 
     def check_field_value(self, name, value) -> bool:
         """
