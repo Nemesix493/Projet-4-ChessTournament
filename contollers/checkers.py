@@ -64,5 +64,5 @@ def check_form(view: ViewsInterface, fields: dict, title: str = None, header: st
             form_filled[key] = view.form(
                 fields={key: fields[key][0]},
                 header=f'{form_filled[key]} {fields[key][2]}'
-            )
+            )[key]
     return form_filled
