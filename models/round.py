@@ -75,4 +75,3 @@ class Round(Model):
                 else:
                     raise TypeError(f'All item of the matches list must be a tuple but one is a {type(match)}')
         return True
-
