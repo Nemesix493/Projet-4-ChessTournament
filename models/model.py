@@ -48,7 +48,10 @@ class Model(abc.ABC):
                 else:
                     raise ValueError(f'Value can not be None !')
             else:
-                raise TypeError(f'{name} has to be a {field_type} and the value is a {type(value)} !')
+                raise TypeError(
+                    f'{name} has to be a {field_type} '
+                    f'and the value is a {type(value)} !'
+                )
         else:
             raise ValueError(f'{name} is not a field')
 

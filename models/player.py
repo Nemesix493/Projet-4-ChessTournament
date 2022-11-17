@@ -26,7 +26,9 @@ class Player(Model):
 
     def __init__(self, **kwargs):
         if 'birthdate' in kwargs.keys():
-            kwargs['birthdate'] = datetime.date(*json.loads(kwargs['birthdate'])[:3])
+            kwargs['birthdate'] = datetime.date(
+                *json.loads(kwargs['birthdate'])[:3]
+            )
         super(Player, self).__init__(**kwargs)
 
     def serialize(self) -> dict:
@@ -48,5 +50,7 @@ class Player(Model):
         super(Player, self).check_field_value(name=name, value=value)
         if name == 'rank':
             if value < 0:
-                raise ValueError(f'rank property has to be positive but it is {value}')
+                raise ValueError(
+                    f'rank property has to be positive but it is {value}'
+                )
         return True

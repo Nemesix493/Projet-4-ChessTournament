@@ -29,13 +29,17 @@ class PlayerController:
         """
         date_controller = DateController()
         if date_controller.check_date_validity(date=birthdate):
-            if date_controller.str_date_to_date(date=birthdate) < datetime.date.today():
+            if date_controller.str_date_to_date(date=birthdate) <\
+                    datetime.date.today():
                 return True
         return False
 
-    def new_player(self, view: ViewsInterface, title: str | None = "Ajout d'un nouveau joueur") -> None | models.Player:
+    def new_player(self, view: ViewsInterface,
+                   title: str | None = "Ajout d'un nouveau joueur")\
+            -> None | models.Player:
         """
-        Display a form do add a new player, control its validity and return it or None if the user cancel the procedure
+        Display a form do add a new player, control its validity and return it
+        or None if the user cancel the procedure
         :param view: ViewsInterface
         :param title: str | None
         :return: None | models.Player
@@ -43,18 +47,32 @@ class PlayerController:
         options = {
             'last_name': [
                 'Nom: ',
-                lambda last_name: last_name.replace(' ', '').replace('-', '').isalpha(),
+                lambda last_name:
+                last_name.replace(' ', '').replace('-', '').isalpha(),
                 'n\'est pas un nom valide'
             ],
             'first_name': [
                 'Prénom: ',
-                lambda first_name: first_name.replace(' ', '').replace('-', '').isalpha(),
+                lambda first_name:
+                first_name.replace(' ', '').replace('-', '').isalpha(),
                 'n\'est pas un prénom valide'
             ],
             'birthdate':
-                ['Date de naissance (JJ/MM/YYYY): ', self.check_birthdate, 'n\'est pas une date de naissance valide'],
-            'gender': ['Genre (M/F): ', lambda gender: gender == 'F' or gender == 'M', 'n\'est pas un genre valide'],
-            'rank': ['Rang: ', lambda rank: rank.isnumeric(), 'n\'est pas une valeur de rang valide']
+                [
+                    'Date de naissance (JJ/MM/YYYY): ',
+                    self.check_birthdate,
+                    'n\'est pas une date de naissance valide'
+                ],
+            'gender': [
+                'Genre (M/F): ',
+                lambda gender: gender == 'F' or gender == 'M',
+                'n\'est pas un genre valide'
+            ],
+            'rank': [
+                'Rang: ',
+                lambda rank: rank.isnumeric(),
+                'n\'est pas une valeur de rang valide'
+            ]
         }
         player_dict = check_form(
             view=view,
@@ -66,7 +84,9 @@ class PlayerController:
         player = models.Player()
         player.last_name = self.normalize_name(player_dict['last_name'])
         player.first_name = self.normalize_name(player_dict['first_name'])
-        player.birthdate = DateController().str_date_to_date(date=player_dict['birthdate'])
+        player.birthdate = DateController().str_date_to_date(
+            date=player_dict['birthdate']
+        )
         player.gender = player_dict['gender']
         player.rank = int(player_dict['rank'])
         result = check_menu(
@@ -83,7 +103,8 @@ class PlayerController:
             return None
 
     @staticmethod
-    def list_player(view: ViewsInterface, players: list, title: str | None = None,
+    def list_player(view: ViewsInterface, players: list,
+                    title: str | None = None,
                     order_property: str = 'first_name') -> None:
         """
         Display a list of players ordered by "order_property"
@@ -94,7 +115,10 @@ class PlayerController:
         :return: None
         """
         players.sort(key=lambda player: getattr(player, order_property))
-        header = '\n'.join([f'{player.first_name} {player.last_name} : {player.rank} pt' for player in players])
+        header = '\n'.join([
+            f'{player.first_name} {player.last_name} : '
+            f'{player.rank} pt' for player in players
+        ])
         view.menu(
             items=[],
             header=header,
@@ -103,8 +127,10 @@ class PlayerController:
         )
 
     @staticmethod
-    def choose_player(view: ViewsInterface, players: list, title: str | None = None,
-                      order_property: str = 'first_name') -> None | models.Player:
+    def choose_player(view: ViewsInterface, players: list,
+                      title: str | None = None,
+                      order_property: str = 'first_name')\
+            -> None | models.Player:
         """
         Display a list of players ordered by "order_property" to choose it
         :param view: ViewsInterface
@@ -117,7 +143,11 @@ class PlayerController:
         option = check_menu(
             view=view,
             items=[
-                *[f'{player.first_name} {player.last_name} : {player.rank} pt' for player in players],
+                *[
+                    f'{player.first_name} {player.last_name} '
+                    f': {player.rank} pt'
+                    for player in players
+                ],
                 'Retour'
             ],
             title=title,
@@ -129,7 +159,8 @@ class PlayerController:
 
     @staticmethod
     def edit_player_rank(view: ViewsInterface, players: list | None = None,
-                         title: str | None = 'Mise a jour du rang d\'un joueur') -> None:
+                         title: str | None =
+                         'Mise a jour du rang d\'un joueur') -> None:
         """
         Choose a player to edit/update its rank
         :param players: list
@@ -158,7 +189,11 @@ class PlayerController:
         header += f'Rang actuel : {player_to_update.rank}'
         new_rank = check_form(
             view=view,
-            fields={'rank': ['Nouveau rang :', lambda rank: rank.isnumeric(), 'n\'est pas une valeur de rang valide']},
+            fields={'rank': [
+                'Nouveau rang :',
+                lambda rank: rank.isnumeric(),
+                'n\'est pas une valeur de rang valide'
+            ]},
             header=header
         )
         if new_rank is None:
@@ -169,7 +204,8 @@ class PlayerController:
                 'Enregistrer',
                 'Ne pas enregistrer'
             ],
-            header=f'Voulez vous enregistre ce nouveau rang ({new_rank["rank"]})'
+            header=f'Voulez vous enregistre ce nouveau rang '
+                   f'({new_rank["rank"]})'
         )
         if save_option == 1:
             return None

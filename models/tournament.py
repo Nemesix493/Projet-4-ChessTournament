@@ -40,11 +40,18 @@ class Tournament(Model):
         self_value_dict = {key: val for key, val in kwargs.items()}
         if 'pk' in self_value_dict.keys():
             players = json.loads(self_value_dict['players'])
-            self_value_dict['players'] = [Player.get(key='pk', value=player) for player in players]
+            self_value_dict['players'] = [
+                Player.get(key='pk', value=player) for player in players
+            ]
             rounds = json.loads(self_value_dict['rounds'])
-            self_value_dict['rounds'] = [Round.get(key='pk', value=tournament_round) for tournament_round in rounds]
+            self_value_dict['rounds'] = [
+                Round.get(key='pk', value=tournament_round)
+                for tournament_round in rounds
+            ]
             dates = json.loads(self_value_dict['date'])
-            self_value_dict['date'] = [datetime.date(*date[:3]) for date in dates]
+            self_value_dict['date'] = [
+                datetime.date(*date[:3]) for date in dates
+            ]
         super(Tournament, self).__init__(**self_value_dict)
 
     def check_field_value(self, name, value) -> bool:
@@ -59,17 +66,22 @@ class Tournament(Model):
             for tournament_round in value:
                 if type(tournament_round) != Round:
                     raise TypeError(
-                        f'All items in rounds property has to be {Round} but one is {type(tournament_round)}'
+                        f'All items in rounds property has to be {Round} '
+                        f'but one is {type(tournament_round)}'
                     )
         if name == 'players':
             for player in value:
                 if type(player) != Player:
-                    raise TypeError(f'All items in players property has to be {Player} but one is {type(player)}')
+                    raise TypeError(
+                        f'All items in players property has to be {Player} '
+                        f'but one is {type(player)}'
+                    )
         if name == 'date':
             for date in value:
                 if type(date) != datetime.date:
                     raise TypeError(
-                        f'All items in date property has to be {datetime.date} but one is {type(date)}'
+                        f'All items in date property has to be {datetime.date}'
+                        f' but one is {type(date)}'
                     )
         return True
 
@@ -79,7 +91,13 @@ class Tournament(Model):
         :return: dict
         """
         result = super(Tournament, self).serialize()
-        result['date'] = json.dumps([date.timetuple() for date in result['date']])
-        result['players'] = json.dumps([player.pk for player in result['players']])
-        result['rounds'] = json.dumps([tournament_round.pk for tournament_round in result['rounds']])
+        result['date'] = json.dumps(
+            [date.timetuple() for date in result['date']]
+        )
+        result['players'] = json.dumps(
+            [player.pk for player in result['players']]
+        )
+        result['rounds'] = json.dumps(
+            [tournament_round.pk for tournament_round in result['rounds']]
+        )
         return result

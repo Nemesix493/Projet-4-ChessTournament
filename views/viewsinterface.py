@@ -17,7 +17,8 @@ class ViewsInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def menu(self, items: list, title: str = None, header: str = None, footer: str = None, submit: str = None) -> str:
+    def menu(self, items: list, title: str = None, header: str = None,
+             footer: str = None, submit: str = None) -> str:
         """
         Display a menu and return the selected option
         :param items: list
@@ -30,7 +31,8 @@ class ViewsInterface(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def form(self, fields: dict, title: str = None, header: str = None, footer: str = None) -> dict:
+    def form(self, fields: dict, title: str = None, header: str = None,
+             footer: str = None) -> dict:
         """
         Display a form and return the user inputs in a dict
         :param fields: dict

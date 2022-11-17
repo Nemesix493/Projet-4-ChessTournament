@@ -30,7 +30,8 @@ class TerminalViews(ViewsInterface):
                 f'+{title_width * "-"}+'
             )
 
-    def menu(self, items: list, title: str = None, header: str = None, footer: str = None, submit: str = None) -> str:
+    def menu(self, items: list, title: str = None, header: str = None,
+             footer: str = None, submit: str = None) -> str:
         """
         Display a menu in terminal and return the selected option
         :param items: list
@@ -57,7 +58,8 @@ class TerminalViews(ViewsInterface):
             return input(submit)
         return input('Votre choix: ').replace(' ', '')
 
-    def form(self, fields: dict, title: str = None, header: str = None, footer: str = None) -> dict:
+    def form(self, fields: dict, title: str = None, header: str = None,
+             footer: str = None) -> dict:
         """
         Display a form and return the user inputs in a dict
         :param fields: dict

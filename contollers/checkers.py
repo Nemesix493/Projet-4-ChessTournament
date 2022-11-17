@@ -3,7 +3,8 @@ from views import ViewsInterface
 
 def is_valid_option_key(option_key: str, list_len: int) -> bool:
     """
-    Check if the option_key can convert to int and if it is in range of list_len
+    Check if the option_key can convert to int and if it is in range of
+    list_len
     :param option_key: str
     :param list_len: int
     :return: bool
@@ -17,9 +18,11 @@ def is_valid_option_key(option_key: str, list_len: int) -> bool:
         return False
 
 
-def check_menu(view: ViewsInterface, items: list, title: str = None, header: str = None, footer: str = None,
-               submit: str = None, invalid_title: str = None, invalid_footer: str = None, invalid_submit: str = None,
-               invalid_header: str = 'Option invalide !') -> int:
+def check_menu(view: ViewsInterface, items: list, title: str = None,
+               header: str = None, footer: str = None, submit: str = None,
+               invalid_title: str = None, invalid_footer: str = None,
+               invalid_submit: str = None, invalid_header: str =
+               'Option invalide veuillez entrer une option valide !') -> int:
     """
     Display the menu in loop while the option is not valid
     :param view: ViewsInterface
@@ -52,7 +55,8 @@ def check_menu(view: ViewsInterface, items: list, title: str = None, header: str
     return int(option_key)-1
 
 
-def check_form(view: ViewsInterface, fields: dict, title: str = None, header: str = None, footer: str = None) -> dict:
+def check_form(view: ViewsInterface, fields: dict, title: str = None,
+               header: str = None, footer: str = None) -> dict:
     form_filled = view.form(
         fields={field: value[0] for field, value in fields.items()},
         title=title,

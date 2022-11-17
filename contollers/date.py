@@ -6,7 +6,8 @@ class DateController:
     def check_date_validity(date) -> bool:
         date = date.split('/')
         if len(date) == 3:
-            if date[2].isnumeric() and date[1].isnumeric() and date[0].isnumeric():
+            if date[2].isnumeric() and date[1].isnumeric() and \
+                    date[0].isnumeric():
                 try:
                     datetime.date(int(date[2]), int(date[1]), int(date[0]))
                     return True
@@ -25,8 +26,14 @@ class DateController:
 
     @classmethod
     def str_list_of_date_to_list_of_date(cls, dates_str: str) -> list:
-        list_date_str = [[date for date in dates.split('-')]for dates in dates_str.split(',')]
-        date_list = [[cls.str_date_to_date(date) for date in dates] for dates in list_date_str]
+        list_date_str = [
+            [date for date in dates.split('-')]
+            for dates in dates_str.split(',')
+        ]
+        date_list = [
+            [cls.str_date_to_date(date) for date in dates]
+            for dates in list_date_str
+        ]
         dates_list_timestamp = [[datetime.datetime(
             date.timetuple()[0],
             date.timetuple()[1],
@@ -39,7 +46,9 @@ class DateController:
             while cursor <= dates[-1]:
                 date_between.append(cursor)
                 cursor += 24*60*60
-            dates_betweens.append([datetime.datetime.fromtimestamp(d).date() for d in date_between])
+            dates_betweens.append([
+                datetime.datetime.fromtimestamp(d).date() for d in date_between
+            ])
         date_list_result = []
         for dates in dates_betweens:
             date_list_result += dates
@@ -57,7 +66,8 @@ class DateController:
         clean_date_list = []
         for loop_cursor in range(len(list_dates_timestamp)):
             if loop_cursor != len(list_dates_timestamp)-1:
-                if int(list_dates_timestamp[loop_cursor])+24*60*60 < int(list_dates_timestamp[loop_cursor+1]):
+                if int(list_dates_timestamp[loop_cursor])+24*60*60 <\
+                        int(list_dates_timestamp[loop_cursor+1]):
                     clean_date_list.append(list_dates[cursor:loop_cursor+1])
                     cursor = loop_cursor+1
             else:
@@ -65,7 +75,10 @@ class DateController:
         result_date_list_str = ''
         for dates in clean_date_list:
             if len(dates) == 1:
-                result_date_list_str += f' le {dates[0].strftime("%d/%m/%Y")} et'
+                result_date_list_str +=\
+                    f' le {dates[0].strftime("%d/%m/%Y")} et'
             else:
-                result_date_list_str += f' du {dates[0].strftime("%d/%m/%Y")} au {dates[-1].strftime("%d/%m/%Y")} et'
+                result_date_list_str +=\
+                    f' du {dates[0].strftime("%d/%m/%Y")} au ' \
+                    f'{dates[-1].strftime("%d/%m/%Y")} et'
         return result_date_list_str[1:-3]

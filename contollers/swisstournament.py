@@ -7,7 +7,8 @@ class SwissTournament:
     @staticmethod
     def max_rank_log10(players: list[models.Player]) -> int:
         """
-        Return the ceil around log10 of the player with the highest rank to sort the players by score,rank
+        Return the ceil around log10 of the player with the highest rank to
+        sort the players by score,rank
         :param players: list[models.Player]
         :return: int
         """
@@ -16,7 +17,8 @@ class SwissTournament:
         return math.ceil(math.log10(ranks[0]))
 
     @staticmethod
-    def get_player_total_score(tournament: models.Tournament, round_number: int | None = None) -> dict:
+    def get_player_total_score(tournament: models.Tournament,
+                               round_number: int | None = None) -> dict:
         """
         Return a dict where each key = player.pk and val = player_score
         :param tournament: models.Tournament
@@ -52,7 +54,11 @@ class SwissTournament:
         players = [player for player in tournament.players]
         players_total_score = cls.get_player_total_score(tournament=tournament)
         score_factor = 10**cls.max_rank_log10(players)
-        players.sort(key=lambda player: players_total_score[player.pk] * score_factor + player.rank, reverse=True)
+        players.sort(
+            key=lambda player:
+            players_total_score[player.pk] * score_factor + player.rank,
+            reverse=True
+        )
         prepared_selection = cls.prepare_selection(
             players=players,
             tournament=tournament
@@ -92,16 +98,22 @@ class SwissTournament:
             return cls.next_round_peer(tournament=tournament)
 
     @staticmethod
-    def calc_priority(player_tournament_rank: int, players_number: int) -> list[int]:
+    def calc_priority(player_tournament_rank: int,
+                      players_number: int) -> list[int]:
         priorities = []
         for i in range(players_number - 1):
             if i % 2 == 0:
                 priorities.append(
-                    (player_tournament_rank + players_number // 2 - i // 2) % players_number
+                    (player_tournament_rank + players_number // 2 - i // 2)
+                    % players_number
                 )
             else:
                 priorities.append(
-                    (player_tournament_rank + players_number // 2 + (i + 1) // 2) % players_number
+                    (
+                        player_tournament_rank + players_number // 2 +
+                        (i + 1) // 2
+                    )
+                    % players_number
                 )
         return priorities
 
@@ -110,23 +122,36 @@ class SwissTournament:
         return match[0][0].pk == player.pk or match[1][0].pk == player.pk
 
     @classmethod
-    def how_many_match_between(cls, tournament: models.Tournament, player_one: models.Player,
+    def how_many_match_between(cls, tournament: models.Tournament,
+                               player_one: models.Player,
                                player_two: models.Player) -> int:
         count = 0
         for tournament_round in tournament.rounds:
             for match in tournament_round.matches:
-                if cls.is_in_match(player=player_one, match=match) and cls.is_in_match(player=player_two, match=match):
+                if cls.is_in_match(player=player_one, match=match) and \
+                        cls.is_in_match(player=player_two, match=match):
                     count += 1
                     break
-                if cls.is_in_match(player=player_one, match=match) or cls.is_in_match(player=player_two, match=match):
+                if cls.is_in_match(player=player_one, match=match) or \
+                        cls.is_in_match(player=player_two, match=match):
                     break
         return count
 
     @classmethod
-    def prepare_selection(cls, players: list[models.Player], tournament: models.Tournament) -> list[tuple]:
-        players_priorities = {players[i].pk: cls.calc_priority(player_tournament_rank=i, players_number=len(players))
-                              for i in range(len(players))}
-        players_opponents = [[player, [], [[] for i in range(len(tournament.rounds)+1)], ''] for player in players]
+    def prepare_selection(cls, players: list[models.Player],
+                          tournament: models.Tournament) -> list[tuple]:
+        players_priorities = {
+            players[i].pk:
+                cls.calc_priority(
+                    player_tournament_rank=i,
+                    players_number=len(players)
+                )
+                for i in range(len(players))
+        }
+        players_opponents = [
+            [player, [], [[] for i in range(len(tournament.rounds)+1)], '']
+            for player in players
+        ]
         for player_opponents in players_opponents:
             for priority in players_priorities[player_opponents[0].pk]:
                 match_count = cls.how_many_match_between(
@@ -142,7 +167,13 @@ class SwissTournament:
                     player_opponents[1].append(opponent)
             # Making a string to sort the list
             for opponents in player_opponents[2]:
-                player_opponents[3] += f'{str(len(players) - len(opponents))}' \
-                                       f'{"0" * (len(str(len(players))) - len(str(len(players)-len(opponents))))}'
+                player_opponents[3] += str(len(players) - len(opponents))
+                player_opponents[3] += "0" * (
+                    len(str(len(players))) -
+                    len(str(len(players)-len(opponents)))
+                )
         players_opponents.sort(key=lambda item: item[3], reverse=True)
-        return [(player_opponents[0], player_opponents[1]) for player_opponents in players_opponents]
+        return [
+            (player_opponents[0], player_opponents[1])
+            for player_opponents in players_opponents
+        ]

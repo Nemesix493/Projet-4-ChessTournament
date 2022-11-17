@@ -11,17 +11,21 @@ from .swisstournament import SwissTournament
 class TournamentController:
     @staticmethod
     def tournament_to_str(tournament: models.Tournament) -> str:
+        tournament_date = DateController.list_of_date_to_str_list_of_date(
+            list_dates=tournament.date
+        )
         return f'Nom : {tournament.name}\n' \
                f'Lieu du tournoi : {tournament.place}\n' \
                f'Le tournoi se deroule ' \
-               f'{DateController().list_of_date_to_str_list_of_date(list_dates=tournament.date)}\n' \
-               f'Nombre de tour : {tournament.round_number}\n' \
+               f'{tournament_date}' \
+               f'\nNombre de tour : {tournament.round_number}\n' \
                f'Description : {tournament.description}\n' \
                f'Contrôle du temps : {tournament.time_control}'
 
     @staticmethod
     def round_to_str(tournament_round: models.Round) -> str:
-        return f'{tournament_round.name} du {tournament_round.start.strftime("%d/%m/%Y, %H:%M:%S")} au ' \
+        return f'{tournament_round.name} du ' \
+               f'{tournament_round.start.strftime("%d/%m/%Y, %H:%M:%S")} au ' \
                f'{tournament_round.start.strftime("%d/%m/%Y, %H:%M:%S")}'
 
     @staticmethod
@@ -45,10 +49,13 @@ class TournamentController:
         check_list = []
         for date in dates_list:
             if type(date) == list:
-                if len(date) == 2 and False not in [DateController().check_date_validity(sub_date)
-                                                    for sub_date in date]:
+                if len(date) == 2 and False not in [
+                    DateController().check_date_validity(sub_date)
+                    for sub_date in date
+                ]:
                     check_list.append(
-                        DateController().str_date_to_date(date[0]) < DateController().str_date_to_date(date[1])
+                        DateController().str_date_to_date(date[0]) <
+                        DateController().str_date_to_date(date[1])
                     )
                 else:
                     check_list.append(False)
@@ -59,7 +66,8 @@ class TournamentController:
     @staticmethod
     def check_player_number(tournament: models.Tournament) -> bool:
         if tournament.players is not None:
-            if len(tournament.players) % 2 == 0 and len(tournament.players) != 0:
+            if len(tournament.players) % 2 == 0 and \
+                    len(tournament.players) != 0:
                 return True
         return False
 
@@ -78,7 +86,8 @@ class TournamentController:
     def get_unsolved_match_index(tournament_round: models.Round):
         unsolved_match_index = []
         for match in range(len(tournament_round.matches)):
-            if tournament_round.matches[match][0][1] == 0 and tournament_round.matches[match][1][1] == 0:
+            if tournament_round.matches[match][0][1] == 0 and \
+                    tournament_round.matches[match][1][1] == 0:
                 unsolved_match_index.append(match)
         return unsolved_match_index
 
@@ -86,7 +95,8 @@ class TournamentController:
         tournament_dict = self.init_tournament(view=view)
         if tournament_dict is None:
             return None
-        tournament_dict['date'] = DateController().str_list_of_date_to_list_of_date(
+        tournament_dict['date'] = DateController().\
+            str_list_of_date_to_list_of_date(
             dates_str=tournament_dict['date']
         )
         tournament_dict['round_number'] = int(tournament_dict['round_number'])
@@ -102,7 +112,8 @@ class TournamentController:
         tournament.save()
 
     @staticmethod
-    def add_existing_players(view: ViewsInterface, tournament: models.Tournament) -> None:
+    def add_existing_players(view: ViewsInterface,
+                             tournament: models.Tournament) -> None:
         player_controller = PlayerController()
         while True:
             new_player = player_controller.choose_player(
@@ -117,7 +128,8 @@ class TournamentController:
                 return None
 
     @staticmethod
-    def add_new_players(view: ViewsInterface, tournament: models.Tournament) -> None:
+    def add_new_players(view: ViewsInterface,
+                        tournament: models.Tournament) -> None:
         player_controller = PlayerController()
         while True:
             new_player = player_controller.new_player(
@@ -133,16 +145,24 @@ class TournamentController:
                     'Créer un nouveau joueur',
                     'Retour'
                 ],
-                invalid_header='Option invalide veuillez rentrer une option valide !'
             )
             if option == 1:
                 return None
 
-    def add_tournament_players(self, view: ViewsInterface, tournament: models.Tournament) -> None:
+    def add_tournament_players(self, view: ViewsInterface,
+                               tournament: models.Tournament) -> None:
         tournament.players = []
         options = [
-            ('Ajouter des joueurs existant', self.add_existing_players, {'view': view, 'tournament': tournament}),
-            ('Ajouter de nouveau joueurs', self.add_new_players, {'view': view, 'tournament': tournament}),
+            (
+                'Ajouter des joueurs existant',
+                self.add_existing_players,
+                {'view': view, 'tournament': tournament}
+            ),
+            (
+                'Ajouter de nouveau joueurs',
+                self.add_new_players,
+                {'view': view, 'tournament': tournament}
+            ),
             ['Retour']
         ]
         while True:
@@ -151,8 +171,7 @@ class TournamentController:
                 title='Ajout des joueurs',
                 items=[option[0] for option in options]
                 if self.check_player_number(tournament=tournament)
-                else [option[0] for option in options[:-1]],
-                invalid_header='Option invalide veuillez rentrer une option valide !'
+                else [option[0] for option in options[:-1]]
             )
             if option_index == 2:
                 return None
@@ -162,12 +181,14 @@ class TournamentController:
         fields = {
             'name': (
                 'Nom : ',
-                lambda name: name.replace(' ', '').replace('\'', '').isalpha(),
+                lambda name:
+                name.replace(' ', '').replace('\'', '').isalpha(),
                 'n\'est pas un nom valide'
             ),
             'place': (
                 'Lieu du tournoi : ',
-                lambda place: place.replace(' ', '').replace('\'', '').isalpha(),
+                lambda place:
+                place.replace(' ', '').replace('\'', '').isalpha(),
                 'n\'est pas valide'
             ),
             'date': (
@@ -213,21 +234,26 @@ class TournamentController:
                 items=[
                     'Modifier',
                     'Valider ces informations',
-                    'Retour au menu principal (Toute les informations seront perdu)'
+                    'Retour au menu principal '
+                    '(Toute les informations seront perdu)'
                 ],
                 header=f'\nNom : {tournament_dict["name"]}\n'
                        f'Lieu du tournoi : {tournament_dict["place"]}\n'
                        f'Le tournoi se deroule : {tournament_dict["date"]}\n'
                        f'Nombre de tour : {tournament_dict["round_number"]}\n'
                        f'Description : {tournament_dict["description"]}\n'
-                       f'Contrôle du temps : {tournament_dict["time_control"]}\n'
+                       f'Contrôle du temps : {tournament_dict["time_control"]}'
+                       f'\n'
             )
             if data_validity == 1:
                 return tournament_dict
             elif data_validity == 2:
                 return None
             fields_name = [
-                *[(key, val[0][:-3]) if key != 'date' else (key, 'Date(s)') for key, val in fields.items()],
+                *[
+                    (key, val[0][:-3]) if key != 'date' else (key, 'Date(s)')
+                    for key, val in fields.items()
+                ],
                 ('time_control', 'Contrôle du temps')
             ]
             modify_field = check_menu(
@@ -243,18 +269,21 @@ class TournamentController:
                     new_field = check_form(
                         view=view,
                         fields={
-                            fields_name[modify_field][0]: fields[fields_name[modify_field][0]]
+                            fields_name[modify_field][0]:
+                                fields[fields_name[modify_field][0]]
                         }
                     )
                     if new_field is not None:
-                        tournament_dict[fields_name[modify_field][0]] = new_field[fields_name[modify_field][0]]
+                        tournament_dict[fields_name[modify_field][0]] = \
+                            new_field[fields_name[modify_field][0]]
                 else:
                     time_control = check_menu(
                         view=view,
                         items=time_controls,
                         header='Quelle est le contrôle du temps ?'
                     )
-                    tournament_dict['time_control'] = time_controls[time_control]
+                    tournament_dict['time_control'] = \
+                        time_controls[time_control]
 
     def pick_up_tournament_again(self, view: ViewsInterface):
         all_tournament = models.Tournament.get_all(
@@ -274,12 +303,17 @@ class TournamentController:
             return None
         round_resum = '\n'.join(
             [self.round_to_str(tournament_round=tournament_round) + '\n' +
-             '\n'.join([f'    {self.match_to_str(match)}' for match in tournament_round.matches])
+             '\n'.join([
+                 f'    {self.match_to_str(match)}'
+                 for match in tournament_round.matches
+             ])
              for tournament_round in tournament.rounds]
         )
 
         view.header(
-            text=f'\n Résumé du tournoi \n{self.tournament_to_str(tournament=tournament)}\n{round_resum}\n'
+            text=f'\n Résumé du tournoi \n'
+                 f'{self.tournament_to_str(tournament=tournament)}\n'
+                 f'{round_resum}\n'
         )
         self.play_tournament(
             view=view,
@@ -287,7 +321,8 @@ class TournamentController:
         )
 
     @staticmethod
-    def list_tournament(view: ViewsInterface, tournaments: list, title: str | None = 'Liste des tournoi',
+    def list_tournament(view: ViewsInterface, tournaments: list,
+                        title: str | None = 'Liste des tournoi',
                         header: str | None = None) -> None | models.Tournament:
         """
 
@@ -298,7 +333,10 @@ class TournamentController:
         :return: None | models.Tournament
         """
         items_list = [
-            *[f'{tournament.name} à {tournament.place}' for tournament in tournaments],
+            *[
+                f'{tournament.name} à {tournament.place}'
+                for tournament in tournaments
+            ],
             'Retour'
         ]
         items_list_index = check_menu(
@@ -312,7 +350,8 @@ class TournamentController:
         return tournaments[items_list_index]
 
     @classmethod
-    def play_tournament(cls, view: ViewsInterface, tournament: models.Tournament):
+    def play_tournament(cls, view: ViewsInterface,
+                        tournament: models.Tournament):
         options = [
             'Jouer le prochain tour',
             'Modifier le rang d\'un joueur',
@@ -322,7 +361,6 @@ class TournamentController:
             option = check_menu(
                 view=view,
                 items=options,
-                invalid_header='Option invalide veuillez rentrer une option valide !'
             )
             if option == 2:
                 return None
@@ -340,7 +378,8 @@ class TournamentController:
                 tournament.save()
 
     @classmethod
-    def play_round(cls, view: ViewsInterface, tournament: models.Tournament) -> None:
+    def play_round(cls, view: ViewsInterface,
+                   tournament: models.Tournament) -> None:
         round_dict = check_form(
             view=view,
             fields={
@@ -365,28 +404,35 @@ class TournamentController:
         tournament_round.save()
 
     @classmethod
-    def match_result(cls, view: ViewsInterface, tournament_round: models.Round):
+    def match_result(cls, view: ViewsInterface,
+                     tournament_round: models.Round):
         while not cls.is_round_finished(tournament_round=tournament_round):
-            unsolved_match_index = cls.get_unsolved_match_index(tournament_round=tournament_round)
+            unsolved_match_index = cls.get_unsolved_match_index(
+                tournament_round=tournament_round
+            )
             options = [
-                f'{tournament_round.matches[index][0][0].first_name} {tournament_round.matches[index][0][0].last_name}'
+                f'{tournament_round.matches[index][0][0].first_name} '
+                f'{tournament_round.matches[index][0][0].last_name}'
                 f' contre '
-                f'{tournament_round.matches[index][1][0].first_name} {tournament_round.matches[index][1][0].last_name}'
+                f'{tournament_round.matches[index][1][0].first_name} '
+                f'{tournament_round.matches[index][1][0].last_name}'
                 for index in unsolved_match_index
             ]
             solved_match = []
             for index in range(len(tournament_round.matches)):
                 if index not in unsolved_match_index:
-                    resum = f'{tournament_round.matches[index][0][0].first_name} ' \
-                            f'{tournament_round.matches[index][0][0].last_name}'
+                    resum = \
+                        f'{tournament_round.matches[index][0][0].first_name} '\
+                        f'{tournament_round.matches[index][0][0].last_name}'
                     if tournament_round.matches[index][0][1] == 1:
                         resum += ' <- victoire | défaite -> '
                     elif tournament_round.matches[index][0][1] == 0:
                         resum += ' <- défaite | victoire -> '
                     else:
                         resum += ' ex aequo '
-                    resum += f'{tournament_round.matches[index][1][0].first_name} ' \
-                             f'{tournament_round.matches[index][1][0].last_name}'
+                    resum += \
+                        f'{tournament_round.matches[index][1][0].first_name} '\
+                        f'{tournament_round.matches[index][1][0].last_name}'
                     solved_match.append(resum)
             header = '\n'.join(solved_match)
             match = check_menu(
@@ -394,20 +440,38 @@ class TournamentController:
                 items=options,
                 header=header
             )
+            player_one_name = getattr(
+                tournament_round.matches[unsolved_match_index[match]][0][0],
+                'first_name'
+            )
+            player_one_name += ' '
+            player_one_name += getattr(
+                tournament_round.matches[unsolved_match_index[match]][0][0],
+                'last_name'
+            )
+            player_two_name = getattr(
+                tournament_round.matches[unsolved_match_index[match]][1][0],
+                'first_name'
+            )
+            player_two_name += ' '
+            player_two_name += getattr(
+                tournament_round.matches[unsolved_match_index[match]][1][0],
+                'last_name'
+            )
             match_result = check_menu(
                 view=view,
                 items=[
                     'ex aequo',
-                    f'victoire de {tournament_round.matches[unsolved_match_index[match]][0][0].first_name} '
-                    f'{tournament_round.matches[unsolved_match_index[match]][0][0].last_name}',
-                    f'victoire de {tournament_round.matches[unsolved_match_index[match]][1][0].first_name} '
-                    f'{tournament_round.matches[unsolved_match_index[match]][1][0].last_name}'
+                    f'victoire de {player_one_name}'
+                    f'victoire de {player_two_name}'
                 ],
                 submit='Qu\'elle est le resulta du match : '
             )
             if match_result == 0:
-                tournament_round.matches[unsolved_match_index[match]][0][1] = 0.5
-                tournament_round.matches[unsolved_match_index[match]][1][1] = 0.5
+                tournament_round.matches[unsolved_match_index[match]][0][1] = \
+                    0.5
+                tournament_round.matches[unsolved_match_index[match]][1][1] = \
+                    0.5
             elif match_result == 1:
                 tournament_round.matches[unsolved_match_index[match]][0][1] = 1
                 tournament_round.matches[unsolved_match_index[match]][1][1] = 0
@@ -433,7 +497,8 @@ class TournamentController:
             cls.display_tournament(view=view, tournament=tournament)
 
     @classmethod
-    def display_tournament(cls, view: ViewsInterface, tournament: models.Tournament):
+    def display_tournament(cls, view: ViewsInterface,
+                           tournament: models.Tournament):
         option = check_menu(
                 view=view,
                 items=[
@@ -466,7 +531,8 @@ class TournamentController:
             )
 
     @classmethod
-    def display_tournament_rounds(cls, view: ViewsInterface, tournament: models.Tournament):
+    def display_tournament_rounds(cls, view: ViewsInterface,
+                                  tournament: models.Tournament):
         while True:
             option = check_menu(
                 view=view,
@@ -477,7 +543,8 @@ class TournamentController:
                     ],
                     'Retour'
                 ],
-                header='Selectionnez un tour pour consulter le details des matchs'
+                header='Selectionnez un tour pour consulter'
+                       'le details des matchs'
             )
             if option == len(tournament.rounds):
                 return None
@@ -487,7 +554,8 @@ class TournamentController:
             )
 
     @classmethod
-    def display_tournament_match(cls, view: ViewsInterface, tournament_round: models.Round):
+    def display_tournament_match(cls, view: ViewsInterface,
+                                 tournament_round: models.Round):
         view.menu(
             items=[],
             header='\n'.join([

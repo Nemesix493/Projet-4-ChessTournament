@@ -33,8 +33,12 @@ class Round(Model):
                 )
                 for match in matches
             ]
-            self_value_dict['start'] = datetime.datetime.fromtimestamp(self_value_dict['start'])
-            self_value_dict['end'] = datetime.datetime.fromtimestamp(self_value_dict['end'])
+            self_value_dict['start'] = datetime.datetime.fromtimestamp(
+                self_value_dict['start']
+            )
+            self_value_dict['end'] = datetime.datetime.fromtimestamp(
+                self_value_dict['end']
+            )
         super(Round, self).__init__(**self_value_dict)
 
     def serialize(self) -> dict:
@@ -69,9 +73,18 @@ class Round(Model):
                 if type(match) == tuple:
                     for line in match:
                         if type(line[0]) != Player:
-                            raise TypeError(f'The player must be a Player object but is a {type(line[0])}')
+                            raise TypeError(
+                                f'The player must be a Player object '
+                                f'but is a {type(line[0])}'
+                            )
                         if type(line[1]) != int and type(line[1]) != float:
-                            raise TypeError(f'The score must be a int or float but is a {type(line[1])}')
+                            raise TypeError(
+                                f'The score must be a int or float '
+                                f'but is a {type(line[1])}'
+                            )
                 else:
-                    raise TypeError(f'All item of the matches list must be a tuple but one is a {type(match)}')
+                    raise TypeError(
+                        f'All item of the matches list must be a tuple '
+                        f'but one is a {type(match)}'
+                    )
         return True
