@@ -462,7 +462,7 @@ class TournamentController:
                 view=view,
                 items=[
                     'ex aequo',
-                    f'victoire de {player_one_name}'
+                    f'victoire de {player_one_name}',
                     f'victoire de {player_two_name}'
                 ],
                 submit='Qu\'elle est le resulta du match : '
