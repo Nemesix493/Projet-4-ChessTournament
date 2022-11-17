@@ -1,4 +1,4 @@
-from Contollers.Main import main_controller
+from contollers import main_controller
 from views.terminalviews import TerminalViews
 
 
@@ -9,4 +9,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
