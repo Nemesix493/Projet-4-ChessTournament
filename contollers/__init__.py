@@ -1,7 +1,7 @@
-from Views.Main import ViewsInterface
-from .Player import PlayerController
-from .Tournament import TournamentController
-from .Checkers import check_menu
+from views.viewsinterface import ViewsInterface
+from .player import PlayerController
+from .tournament import TournamentController
+from .checkers import check_menu
 
 
 def main_controller(view: ViewsInterface) -> None:
@@ -12,9 +12,15 @@ def main_controller(view: ViewsInterface) -> None:
     """
     options = [
         ('Nouveau tournoi', TournamentController().new_tournament, {'view': view}),
+        ('Reprendre un tournoi', TournamentController().pick_up_tournament_again, {'view': view}),
         ('Nouveau joueur', PlayerController().new_player, {'view': view}),
-        ('Liste des joueur', PlayerController().list_player, {'view': view}),
-        ('Liste des tournois', TournamentController().list_tournament, {'view': view}),
+        (
+            'Editer le rang d\'un joueur',
+            PlayerController.edit_player_rank,
+            {'view': view, 'title': 'Editer le rang d\'un joueur'}
+         ),
+        ('Liste des joueurs', PlayerController().player_report, {'view': view}),
+        ('Rapport de tournois', TournamentController().tournament_report, {'view': view}),
         ('Quitter', quit, {})
     ]
     while True:
