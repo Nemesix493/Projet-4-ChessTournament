@@ -23,9 +23,10 @@ class DateController:
             day=int(date_list[0])
         )
 
-    def str_list_of_date_to_list_of_date(self, dates_str: str) -> list:
+    @classmethod
+    def str_list_of_date_to_list_of_date(cls, dates_str: str) -> list:
         list_date_str = [[date for date in dates.split('-')]for dates in dates_str.split(',')]
-        date_list = [[self.str_date_to_date(date) for date in dates] for dates in list_date_str]
+        date_list = [[cls.str_date_to_date(date) for date in dates] for dates in list_date_str]
         dates_list_timestamp = [[datetime.datetime(
             date.timetuple()[0],
             date.timetuple()[1],
