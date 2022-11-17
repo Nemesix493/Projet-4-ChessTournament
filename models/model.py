@@ -46,7 +46,7 @@ class Model(abc.ABC):
                 elif field_default is not None:
                     return True
                 else:
-                    raise ValueError(f'Value can not be None !')
+                    raise ValueError('Value can not be None !')
             else:
                 raise TypeError(
                     f'{name} has to be a {field_type} '
