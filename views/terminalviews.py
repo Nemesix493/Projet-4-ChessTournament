@@ -12,7 +12,7 @@ class TerminalViews(ViewsInterface):
     @staticmethod
     def title(title: str) -> None:
         """
-        Display menu
+        Display Title
         :param title: str
         :return:
         """

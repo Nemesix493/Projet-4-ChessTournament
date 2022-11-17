@@ -5,6 +5,17 @@ class ViewsInterface(abc.ABC):
     """
     Interface for views
     """
+
+    @staticmethod
+    @abc.abstractmethod
+    def title(title: str) -> None:
+        """
+        Display Title
+        :param title: str
+        :return:
+        """
+        pass
+
     @abc.abstractmethod
     def menu(self, items: list, title: str = None, header: str = None, footer: str = None, submit: str = None) -> str:
         """
