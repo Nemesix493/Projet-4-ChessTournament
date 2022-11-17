@@ -2,18 +2,26 @@ import datetime
 
 
 class DateController:
-    def str_date_to_date(self, date: str) -> datetime.date:
-        if not date.replace('/', '').isnumeric():
-            raise ValueError(f'"{date}" n\'est pas une date valide !')
+    @staticmethod
+    def check_date_validity(date) -> bool:
+        date = date.split('/')
+        if len(date) == 3:
+            if date[2].isnumeric() and date[1].isnumeric() and date[0].isnumeric():
+                try:
+                    datetime.date(int(date[2]), int(date[1]), int(date[0]))
+                    return True
+                except ValueError:
+                    return False
+        return False
+
+    @staticmethod
+    def str_date_to_date(date: str) -> datetime.date:
         date_list = date.split('/')
-        try:
-            return datetime.date(
-                year=int(date_list[2]),
-                month=int(date_list[1]),
-                day=int(date_list[0])
-            )
-        except ValueError:
-            raise ValueError(f'"{date}" n\'est pas une date valide !')
+        return datetime.date(
+            year=int(date_list[2]),
+            month=int(date_list[1]),
+            day=int(date_list[0])
+        )
 
     def str_list_of_date_to_list_of_date(self, dates_str: str) -> list:
         list_date_str = [[date for date in dates.split('-')]for dates in dates_str.split(',')]
@@ -36,7 +44,8 @@ class DateController:
             date_list_result += dates
         return date_list_result
 
-    def list_of_date_to_str_list_of_date(self, list_dates: list) -> str:
+    @staticmethod
+    def list_of_date_to_str_list_of_date(list_dates: list) -> str:
         list_dates.sort()
         list_dates_timestamp = [datetime.datetime(
             date.timetuple()[0],
