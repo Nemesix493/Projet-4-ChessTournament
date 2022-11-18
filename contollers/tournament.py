@@ -26,7 +26,7 @@ class TournamentController:
     def round_to_str(tournament_round: models.Round) -> str:
         return f'{tournament_round.name} du ' \
                f'{tournament_round.start.strftime("%d/%m/%Y, %H:%M:%S")} au ' \
-               f'{tournament_round.start.strftime("%d/%m/%Y, %H:%M:%S")}'
+               f'{tournament_round.end.strftime("%d/%m/%Y, %H:%M:%S")}'
 
     @staticmethod
     def match_to_str(match: tuple) -> str:
