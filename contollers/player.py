@@ -119,12 +119,7 @@ class PlayerController:
             f'{player.first_name} {player.last_name} : '
             f'{player.rank} pt' for player in players
         ])
-        view.menu(
-            items=[],
-            header=header,
-            title=title,
-            submit='Retour'
-        )
+        view.header(text=header)
 
     @staticmethod
     def choose_player(view: ViewsInterface, players: list,

@@ -163,12 +163,17 @@ class TournamentController:
                 self.add_new_players,
                 {'view': view, 'tournament': tournament}
             ),
-            ['Retour']
+            ['Valider tous c\'est joueur']
         ]
+        view.title(title='Ajout des joueurs')
         while True:
+            PlayerController.list_player(
+                view=view,
+                players=tournament.players,
+                order_property='rank'
+            )
             option_index = check_menu(
                 view=view,
-                title='Ajout des joueurs',
                 items=[option[0] for option in options]
                 if self.check_player_number(tournament=tournament)
                 else [option[0] for option in options[:-1]]
@@ -181,8 +186,7 @@ class TournamentController:
         fields = {
             'name': (
                 'Nom : ',
-                lambda name:
-                name.replace(' ', '').replace('\'', '').isalpha(),
+                lambda name: True,
                 'n\'est pas un nom valide'
             ),
             'place': (

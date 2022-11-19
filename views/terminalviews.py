@@ -43,16 +43,18 @@ class TerminalViews(ViewsInterface):
         """
         if title:
             self.title(title)
+            print('')
         if header:
-            self.header(text=header)
+            self.header(text=header + '\n')
         key_length = len(str(len(items)))
         for i in range(len(items)):
             print(
                 f'{i+1}{(key_length - len(str(i+1))) * " "} {items[i]}',
             )
+        print('')
         if footer:
             print(
-                footer,
+                footer + '\n',
             )
         if submit:
             return input(submit)
@@ -70,12 +72,14 @@ class TerminalViews(ViewsInterface):
         """
         if title:
             self.title(title)
+            print('')
         if header:
-            self.header(text=header)
+            self.header(text=header + '\n')
         result = {key: input(val) for key, val in fields.items()}
+        print('')
         if footer:
             print(
-                footer,
+                footer + '\n',
             )
         return result
 
