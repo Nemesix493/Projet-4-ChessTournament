@@ -45,7 +45,7 @@ class TerminalViews(ViewsInterface):
             self.title(title)
             print('')
         if header:
-            self.header(text=header + '\n')
+            self.header(text=header)
         key_length = len(str(len(items)))
         for i in range(len(items)):
             print(
@@ -74,7 +74,7 @@ class TerminalViews(ViewsInterface):
             self.title(title)
             print('')
         if header:
-            self.header(text=header + '\n')
+            self.header(text=header)
         result = {key: input(val) for key, val in fields.items()}
         print('')
         if footer:
@@ -84,4 +84,4 @@ class TerminalViews(ViewsInterface):
         return result
 
     def header(self, text: str):
-        print(text)
+        print(text + '\n')

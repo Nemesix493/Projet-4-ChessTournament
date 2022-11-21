@@ -173,12 +173,13 @@ class PlayerController:
             view=view,
             items=items,
             title=title,
+            header='De quel joueur voulez vous modifier le rang ?',
             invalid_header='Choix invalide\n Veuillez réessayer !'
         )
         if option == len(items)-1:
             return None
         player_to_update = players[option]
-        header = f'{player_to_update.firs_name} {player_to_update.last_name}\n'
+        header = f'{player_to_update.first_name} {player_to_update.last_name}\n'
         header += 'Né' if player_to_update.gender == 'M' else 'Née'
         header += f' le: {player_to_update.birthdate}\n'
         header += f'Rang actuel : {player_to_update.rank}'

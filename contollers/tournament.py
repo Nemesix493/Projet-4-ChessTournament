@@ -163,7 +163,7 @@ class TournamentController:
                 self.add_new_players,
                 {'view': view, 'tournament': tournament}
             ),
-            ['Valider tous c\'est joueur']
+            ['Valider ces joueur']
         ]
         view.title(title='Ajout des joueurs')
         while True:
@@ -503,36 +503,37 @@ class TournamentController:
     @classmethod
     def display_tournament(cls, view: ViewsInterface,
                            tournament: models.Tournament):
-        option = check_menu(
-                view=view,
-                items=[
-                    'Afficher les joueurs du tournoi par ordre alphabetique',
-                    'Afficher les joueurs du tournoi par ordre de rang',
-                    'Afficher les tours du tournoi',
-                    'Retour'
-                ],
-                header=f'\n{cls.tournament_to_str(tournament=tournament)}\n'
-        )
-        if option == 3:
-            return None
-        elif option == 0:
-            PlayerController().list_player(
-                view=view,
-                players=tournament.players,
-                title=None
+        while True:
+            option = check_menu(
+                    view=view,
+                    items=[
+                        'Afficher les joueurs du tournoi par ordre alphabetique',
+                        'Afficher les joueurs du tournoi par ordre de rang',
+                        'Afficher les tours du tournoi',
+                        'Retour'
+                    ],
+                    header=f'\n{cls.tournament_to_str(tournament=tournament)}\n'
             )
-        elif option == 1:
-            PlayerController().list_player(
-                view=view,
-                players=tournament.players,
-                order_property='rank',
-                title=None
-            )
-        else:
-            cls.display_tournament_rounds(
-                view=view,
-                tournament=tournament
-            )
+            if option == 3:
+                return None
+            elif option == 0:
+                PlayerController().list_player(
+                    view=view,
+                    players=tournament.players,
+                    title=None
+                )
+            elif option == 1:
+                PlayerController().list_player(
+                    view=view,
+                    players=tournament.players,
+                    order_property='rank',
+                    title=None
+                )
+            else:
+                cls.display_tournament_rounds(
+                    view=view,
+                    tournament=tournament
+                )
 
     @classmethod
     def display_tournament_rounds(cls, view: ViewsInterface,
@@ -547,7 +548,7 @@ class TournamentController:
                     ],
                     'Retour'
                 ],
-                header='Selectionnez un tour pour consulter'
+                header='Selectionnez un tour pour consulter '
                        'le details des matchs'
             )
             if option == len(tournament.rounds):
