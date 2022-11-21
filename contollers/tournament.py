@@ -507,12 +507,14 @@ class TournamentController:
             option = check_menu(
                     view=view,
                     items=[
-                        'Afficher les joueurs du tournoi par ordre alphabetique',
+                        'Afficher les joueurs du '
+                        'tournoi par ordre alphabetique',
                         'Afficher les joueurs du tournoi par ordre de rang',
                         'Afficher les tours du tournoi',
                         'Retour'
                     ],
-                    header=f'\n{cls.tournament_to_str(tournament=tournament)}\n'
+                    header=f'\n{cls.tournament_to_str(tournament=tournament)}'
+                           f'\n'
             )
             if option == 3:
                 return None

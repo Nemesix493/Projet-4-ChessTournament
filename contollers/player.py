@@ -104,14 +104,12 @@ class PlayerController:
 
     @staticmethod
     def list_player(view: ViewsInterface, players: list,
-                    title: str | None = None,
                     order_property: str = 'first_name') -> None:
         """
         Display a list of players ordered by "order_property"
         :param view: ViewsInterface
         :param players: list
         :param order_property: str
-        :param title: str
         :return: None
         """
         players.sort(key=lambda player: getattr(player, order_property))
@@ -179,7 +177,8 @@ class PlayerController:
         if option == len(items)-1:
             return None
         player_to_update = players[option]
-        header = f'{player_to_update.first_name} {player_to_update.last_name}\n'
+        header = f'{player_to_update.first_name}' \
+                 f'{player_to_update.last_name}\n'
         header += 'Né' if player_to_update.gender == 'M' else 'Née'
         header += f' le: {player_to_update.birthdate}\n'
         header += f'Rang actuel : {player_to_update.rank}'
