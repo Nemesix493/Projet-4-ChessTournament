@@ -16,9 +16,9 @@ class TournamentController:
         )
         return f'Nom : {tournament.name}\n' \
                f'Lieu du tournoi : {tournament.place}\n' \
-               f'Le tournoi se deroule ' \
+               f'Le tournoi se déroule ' \
                f'{tournament_date}' \
-               f'\nNombre de tour : {tournament.round_number}\n' \
+               f'\nNombre de tours : {tournament.round_number}\n' \
                f'Description : {tournament.description}\n' \
                f'Contrôle du temps : {tournament.time_control}'
 
@@ -154,7 +154,7 @@ class TournamentController:
         tournament.players = []
         options = [
             (
-                'Ajouter des joueurs existant',
+                'Ajouter des joueurs existants',
                 self.add_existing_players,
                 {'view': view, 'tournament': tournament}
             ),
@@ -163,7 +163,7 @@ class TournamentController:
                 self.add_new_players,
                 {'view': view, 'tournament': tournament}
             ),
-            ['Valider ces joueur']
+            ['Valider ces joueurs']
         ]
         view.title(title='Ajout des joueurs')
         while True:
@@ -202,10 +202,11 @@ class TournamentController:
                 'Pour date_1 au date_2 écrivez: date_1-date_2\n'
                 'Date(s) : ',
                 self.check_tournament_date,
-                'l\'une des dates n\'est pas valide ou la syntax est incorect'
+                'l\'une des dates n\'est pas valide ou la syntaxe est '
+                'incorecte'
             ),
             'round_number': (
-                'Nombre de tour (4 par défaut) : ',
+                'Nombre de tours (4 par défaut) : ',
                 lambda round_number: int(round_number) > 0
                 if round_number.isnumeric() else round_number == '',
                 'n\'est pas valide'
@@ -227,7 +228,7 @@ class TournamentController:
         time_control = check_menu(
             view=view,
             items=time_controls,
-            header='Quelle est le contrôle du temps ?'
+            header='Quel est le contrôle du temps ?'
         )
         tournament_dict['time_control'] = time_controls[time_control]
         while True:
@@ -239,12 +240,12 @@ class TournamentController:
                     'Modifier',
                     'Valider ces informations',
                     'Retour au menu principal '
-                    '(Toute les informations seront perdu)'
+                    '(Toutes les informations seront perdues)'
                 ],
                 header=f'\nNom : {tournament_dict["name"]}\n'
                        f'Lieu du tournoi : {tournament_dict["place"]}\n'
-                       f'Le tournoi se deroule : {tournament_dict["date"]}\n'
-                       f'Nombre de tour : {tournament_dict["round_number"]}\n'
+                       f'Le tournoi se déroule : {tournament_dict["date"]}\n'
+                       f'Nombre de tours : {tournament_dict["round_number"]}\n'
                        f'Description : {tournament_dict["description"]}\n'
                        f'Contrôle du temps : {tournament_dict["time_control"]}'
                        f'\n'
@@ -266,7 +267,7 @@ class TournamentController:
                     *[field[1] for field in fields_name],
                     'Ne rien modifier'
                 ],
-                header='Quel champ voulez vous modifier'
+                header='Quel champ voulez-vous modifier ?'
             )
             if modify_field != len(fields_name):
                 if fields_name[modify_field][0] != 'time_control':
@@ -284,7 +285,7 @@ class TournamentController:
                     time_control = check_menu(
                         view=view,
                         items=time_controls,
-                        header='Quelle est le contrôle du temps ?'
+                        header='Quel est le contrôle du temps ?'
                     )
                     tournament_dict['time_control'] = \
                         time_controls[time_control]
@@ -326,7 +327,7 @@ class TournamentController:
 
     @staticmethod
     def list_tournament(view: ViewsInterface, tournaments: list,
-                        title: str | None = 'Liste des tournoi',
+                        title: str | None = 'Liste des tournois',
                         header: str | None = None) -> None | models.Tournament:
         """
 
@@ -469,7 +470,7 @@ class TournamentController:
                     f'victoire de {player_one_name}',
                     f'victoire de {player_two_name}'
                 ],
-                submit='Qu\'elle est le resulta du match : '
+                submit='Quel est le résultat du match : '
             )
             if match_result == 0:
                 tournament_round.matches[unsolved_match_index[match]][0][1] = \
@@ -508,7 +509,7 @@ class TournamentController:
                     view=view,
                     items=[
                         'Afficher les joueurs du '
-                        'tournoi par ordre alphabetique',
+                        'tournoi par ordre alphabétique',
                         'Afficher les joueurs du tournoi par ordre de rang',
                         'Afficher les tours du tournoi',
                         'Retour'

@@ -49,13 +49,13 @@ class PlayerController:
                 'Nom: ',
                 lambda last_name:
                 last_name.replace(' ', '').replace('-', '').isalpha(),
-                'n\'est pas un nom valide'
+                ' n\'est pas un nom valide'
             ],
             'first_name': [
                 'Prénom: ',
                 lambda first_name:
                 first_name.replace(' ', '').replace('-', '').isalpha(),
-                'n\'est pas un prénom valide'
+                ' n\'est pas un prénom valide'
             ],
             'birthdate':
                 [
@@ -153,7 +153,7 @@ class PlayerController:
     @staticmethod
     def edit_player_rank(view: ViewsInterface, players: list | None = None,
                          title: str | None =
-                         'Mise a jour du rang d\'un joueur') -> None:
+                         'Mise à jour du rang d\'un joueur') -> None:
         """
         Choose a player to edit/update its rank
         :param players: list
@@ -171,7 +171,7 @@ class PlayerController:
             view=view,
             items=items,
             title=title,
-            header='De quel joueur voulez vous modifier le rang ?',
+            header='De quel joueur voulez-vous modifier le rang ?',
             invalid_header='Choix invalide\n Veuillez réessayer !'
         )
         if option == len(items)-1:
@@ -199,7 +199,7 @@ class PlayerController:
                 'Enregistrer',
                 'Ne pas enregistrer'
             ],
-            header=f'Voulez vous enregistre ce nouveau rang '
+            header=f'Voulez-vous enregistrer ce nouveau rang '
                    f'({new_rank["rank"]})'
         )
         if save_option == 1:
@@ -222,7 +222,7 @@ class PlayerController:
     @classmethod
     def player_report(cls, view: ViewsInterface) -> None:
         options = [
-            ('Afficher la liste de joueurs par ordre de prenom', 'first_name'),
+            ('Afficher la liste de joueurs par ordre de prénom', 'first_name'),
             ('Afficher la liste de joueurs par ordre de nom', 'last_name'),
             ('Afficher la liste de joueurs par ordre de rang', 'rank'),
             ('Retour', None)
