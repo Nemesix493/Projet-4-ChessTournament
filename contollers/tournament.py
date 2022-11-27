@@ -316,7 +316,7 @@ class TournamentController:
         )
 
         view.header(
-            text=f'\n Résumé du tournoi \n'
+            text=f'\nRésumé du tournoi \n'
                  f'{self.tournament_to_str(tournament=tournament)}\n'
                  f'{round_resum}\n'
         )
