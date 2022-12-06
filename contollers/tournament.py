@@ -523,14 +523,12 @@ class TournamentController:
                 PlayerController().list_player(
                     view=view,
                     players=tournament.players,
-                    title=None
                 )
             elif option == 1:
                 PlayerController().list_player(
                     view=view,
                     players=tournament.players,
-                    order_property='rank',
-                    title=None
+                    order_property='rank'
                 )
             else:
                 cls.display_tournament_rounds(
